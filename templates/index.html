@@ -1,33 +1,32 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Flask Goals - Trang chính</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta charset="UTF-8">
+    <title>Goals Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
-  <header>
-    <h1>Chào mừng bạn đến với Flask Goals</h1>
-    <p>Theo dõi và quản lý mục tiêu học tập của bạn một cách dễ dàng.</p>
-  </header>
-
-  <main>
-    <section class="image-section">
-      <img src="{{ url_for('static', filename='img/hinh1.png') }}" alt="Hình minh họa mục tiêu" />
-    </section>
-
-    <section class="content">
-      <h2>Mục tiêu hôm nay</h2>
-      <ul>
-        <li>📘 Học xong chương 1 môn Toán</li>
-        <li>📗 Ôn lại từ vựng tiếng Anh</li>
-        <li>📙 Viết 1 bài nhật ký</li>
-      </ul>
-    </section>
-  </main>
-
-  <footer>
-    <p>&copy; 2025 Flask Goals - Bản thử nghiệm</p>
-  </footer>
+    <div class="container">
+        <h1>🎯 Mục tiêu của bạn</h1>
+        <form method="POST">
+            <input type="text" name="goal" placeholder="Mục tiêu..." required>
+            <select name="status">
+                <option value="Chưa làm">Chưa làm</option>
+                <option value="Đang làm">Đang làm</option>
+                <option value="Hoàn thành">Hoàn thành</option>
+            </select>
+            <input type="date" name="deadline" required>
+            <button type="submit">Thêm</button>
+        </form>
+        <ul>
+            {% for g in goals %}
+                <li>
+                    <strong>{{ g.goal }}</strong> - 
+                    Trạng thái: {{ g.status }} - 
+                    Hạn: {{ g.deadline }}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 </body>
 </html>

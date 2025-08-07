@@ -1,28 +1,28 @@
 from flask import Flask, render_template, request, redirect, url_for
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
 
-# Dữ liệu mẫu lưu tạm trên RAM (chưa dùng CSDL)
+# Danh sách mục tiêu lưu tạm trong bộ nhớ
 goals = []
 
-@app.route('/')
-def home():
-    return render_template('index.html')
+@app.route("/", methods=["GET", "POST"])
+def index():
+    if request.method == "POST":
+        goal_text = request.form.get("goal")
+        status = request.form.get("status")
+        deadline = request.form.get("deadline")
+        if goal_text and status and deadline:
+            goals.append({
+                "goal": goal_text,
+                "status": status,
+                "deadline": deadline
+            })
+        return redirect(url_for("index"))
+    return render_template("index.html", goals=goals)
 
-@app.route('/add', methods=['POST'])
-def add_goal():
-    title = request.form.get('title')
-    description = request.form.get('description')
-    if title:
-        goals.append({
-            'title': title,
-            'description': description
-        })
-    return redirect(url_for('list_goals'))
-
-@app.route('/list')
-def list_goals():
-    return render_template('list.html', goals=goals)
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
