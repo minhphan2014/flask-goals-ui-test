@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Flask Goals - Trang chính</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <header>
+    <h1>Chào mừng bạn đến với Flask Goals</h1>
+    <p>Theo dõi và quản lý mục tiêu học tập của bạn một cách dễ dàng.</p>
+  </header>
+
+  <main>
+    <section class="image-section">
+      <img src="{{ url_for('static', filename='img/hinh1.png') }}" alt="Hình minh họa mục tiêu" />
+    </section>
+
+    <section class="content">
+      <h2>Mục tiêu hôm nay</h2>
+      <ul>
+        <li>📘 Học xong chương 1 môn Toán</li>
+        <li>📗 Ôn lại từ vựng tiếng Anh</li>
+        <li>📙 Viết 1 bài nhật ký</li>
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 Flask Goals - Bản thử nghiệm</p>
+  </footer>
+</body>
+</html>
