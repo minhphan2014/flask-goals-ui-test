@@ -1,32 +1,57 @@
-
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect
+import json
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
 
 app = Flask(__name__)
 
-# Danh sách mục tiêu lưu tạm trong bộ nhớ
-goals = []
+GOALS_FILE = "goals.json"
 
-@app.route("/", methods=["GET", "POST"])
+# Tải dữ liệu từ file goals.json
+def load_goals():
+    if os.path.exists(GOALS_FILE):
+        with open(GOALS_FILE, "r") as f:
+            return json.load(f)
+    return []
+
+# Lưu dữ liệu vào file goals.json
+def save_goals(goals):
+    with open(GOALS_FILE, "w") as f:
+        json.dump(goals, f)
+
+# Danh sách mục tiêu
+goals = load_goals()
+
+@app.route("/")
 def index():
-    if request.method == "POST":
-        goal_text = request.form.get("goal")
-        status = request.form.get("status")
-        deadline = request.form.get("deadline")
-        if goal_text and status and deadline:
-            goals.append({
-                "goal": goal_text,
-                "status": status,
-                "deadline": deadline
-            })
-        return redirect(url_for("index"))
     return render_template("index.html", goals=goals)
 
-if __name__ == "__main__":
-    import os
-port = int(os.environ.get("PORT", 5000))
-app.run(host="0.0.0.0", port=port)
+@app.route("/add", methods=["POST"])
+def add_goal():
+    name = request.form.get("name")
+    due_date = request.form.get("due_date")
+    if name:
+        goal = {
+            "name": name,
+            "due_date": due_date,
+            "status": False  # mặc định là chưa làm
+        }
+        goals.append(goal)
+        save_goals(goals)
+    return redirect("/")
 
+@app.route("/toggle/<int:index>", methods=["POST"])
+def toggle_status(index):
+    if 0 <= index < len(goals):
+        goals[index]["status"] = not goals[index]["status"]
+        save_goals(goals)
+    return redirect("/")
+
+@app.route("/delete/<int:index>", methods=["POST"])
+def delete_goal(index):
+    if 0 <= index < len(goals):
+        goals.pop(index)
+        save_goals(goals)
+    return redirect("/")
+
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=10000)
